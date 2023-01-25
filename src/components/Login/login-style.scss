@@ -17,4 +17,31 @@
     width: 350px;
     height: 400px;
   }
+
+  .error {
+    color: lightcoral;
+    height: 18px;
+  }
+
+  .loader {
+    margin-right:10px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
 }

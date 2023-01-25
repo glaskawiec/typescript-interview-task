@@ -1,11 +1,10 @@
-import qs from 'query-string';
+import { stringify } from 'query-string';
 import { API } from '../constants';
 
-const getUrl = (endpoint: API, params?: Record<string, any>) => {
+const getUrl = (endpoint: API, params?: Record<string, number | string>) => {
+  const query = stringify(params);
 
-  const query = qs.stringify(params);
-
-  return `${process.env.API_URL}/${endpoint}${query ? `?${query}` : ''}`
+  return `${process.env.API_URL}/${endpoint}${query ? `?${query}` : ''}`;
 };
 
 export default getUrl;

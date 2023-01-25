@@ -7,12 +7,13 @@ import items from './endpoints/items';
 
 import logger from './middleware/logger';
 
-
 const app = express();
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 
 app.use(bodyParser.json());
 
@@ -24,7 +25,6 @@ app.use(logger);
 app.use(authentication);
 app.use(items);
 
-
 app.listen(9003, 'localhost');
 
-console.log('server is running on port:', 9003)
+console.log('server is running on port:', 9003);

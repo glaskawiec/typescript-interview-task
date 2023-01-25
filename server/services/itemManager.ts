@@ -1,20 +1,9 @@
 import { passwords } from '../data';
 
-let items = [];
+let items = [...passwords];
 
-export const updateItem = (item) => {
-  items.push(item);
+export const updateItem = (updatedItem) => {
+  items = items.map((item) => (item.id === updatedItem.id ? updatedItem : item));
 };
 
-export const getItems = () => {
-  return passwords.map((passwordItem) => {
-    const updatedItem = items.find(({ id }) => id === passwordItem.id);
-
-    return {
-      ...(updatedItem || passwordItem),
-    };
-  })
-};
-
-
-
+export const getItems = () => items;
