@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render correctly 1`] = `
+<div
+  className="filter"
+>
+  <div
+    className="filter-tab"
+    data-testid="weak-filter"
+    onClick={[Function]}
+  >
+    Weak (4)
+  </div>
+  <div
+    className="filter-tab"
+    data-testid="reused-filter"
+    onClick={[Function]}
+  >
+    Reused (4)
+  </div>
+  <div
+    className="filter-tab"
+    data-testid="old-filter"
+    onClick={[Function]}
+  >
+    Old (1)
+  </div>
+</div>
+`;

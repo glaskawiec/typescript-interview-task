@@ -1,29 +1,28 @@
-import {BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
-
+import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
+import ItemsRoutes from './components/Items/ItemsRoutes';
 import Login from './components/Login/Login';
-import PasswordHealth from './components/PasswordHealth/PasswordHealth';
-import PrivateRoute from './components/PrivateRoute';
-import PublicRoute from './components/PublicRoute';
-import {Routes} from './constants';
-import { UserContextProvider } from './components/UserContext';
-
+import PrivateRoute from './components/Common/PrivateRoute';
+import PublicRoute from './components/Common/PublicRoute';
+import { Paths } from './constants';
+import { UserContextProvider } from './contexts/UserContext';
 import './style/styles.scss';
+import { ItemsContextProvider } from './contexts/ItemsContext';
 
 const App = () => (
   <Router>
     <Switch>
-      <PublicRoute
-        path={Routes.Login}
-        component={Login}
-      />
+      <PublicRoute path={Paths.Login} component={Login} />
       <PrivateRoute
-        path={Routes.PasswordHealth}
-        component={() => <UserContextProvider><PasswordHealth /></UserContextProvider>}
+        path={Paths.Items}
+        component={() => (
+          <UserContextProvider>
+            <ItemsContextProvider>
+              <ItemsRoutes />
+            </ItemsContextProvider>
+          </UserContextProvider>
+        )}
       />
-      <PrivateRoute
-        path={Routes.Root}
-        component={() => <Redirect to={Routes.PasswordHealth}/>}
-      />
+      <PrivateRoute path={Paths.Root} component={() => <Redirect to={Paths.Items} />} />
     </Switch>
   </Router>
 );

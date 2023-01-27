@@ -1,13 +1,19 @@
-export const users = [
-  {
-    id: '00001',
-    username: 'admin',
-    email: 'user@organization.com',
-    password: '$2a$09$rOR21hkGhfIIv7zG2Fjon.kgheb7JCxj6xsg7Wylwfhh7LBGEXi7y',
-  },
-];
+import { render } from '@testing-library/react';
+import { IItem } from '../../../../services/getUserItems';
+import renderer from 'react-test-renderer';
+import Filter from '../Filter';
+import userEvent from '@testing-library/user-event';
+import { Paths } from '../../../../constants';
 
-export const passwords = [
+const pushMock = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: pushMock,
+  }),
+}));
+
+const items: IItem[] = [
   {
     id: '001',
     title: 'Google',
@@ -79,3 +85,43 @@ export const passwords = [
     createdAt: new Date().toISOString(),
   },
 ];
+
+const setup = () => {
+  return render(<Filter items={items} />);
+};
+
+beforeEach(() => {
+  pushMock.mockClear();
+});
+
+test('should render correctly', () => {
+  const tree = renderer.create(<Filter items={items} />).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+test('should redirect to correct path after clicking on "Weak" filter', async () => {
+  const { queryByTestId } = setup();
+
+  const weakFilterButton = queryByTestId('weak-filter');
+  await userEvent.click(weakFilterButton);
+
+  expect(pushMock.mock.calls[0][0]).toBe(Paths.Weak);
+});
+
+test('should redirect to correct path after clicking on "Old" filter', async () => {
+  const { queryByTestId } = setup();
+
+  const weakFilterButton = queryByTestId('old-filter');
+  await userEvent.click(weakFilterButton);
+
+  expect(pushMock.mock.calls[0][0]).toBe(Paths.Old);
+});
+
+test('should redirect to correct path after clicking on "Reused" filter', async () => {
+  const { queryByTestId } = setup();
+
+  const weakFilterButton = queryByTestId('reused-filter');
+  await userEvent.click(weakFilterButton);
+
+  expect(pushMock.mock.calls[0][0]).toBe(Paths.Reused);
+});

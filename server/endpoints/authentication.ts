@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 import timeout from '../middleware/timeout';
 import { users } from '../data';
 import { addToken, removeToken, getTokenOwner, generateToken } from '../services/tokenManager';
@@ -6,13 +7,12 @@ import { addToken, removeToken, getTokenOwner, generateToken } from '../services
 const router = Router();
 
 // if password and email is correct returns new token
-router.get('/api/login',timeout, (req, res) => {
-  const {username, password} = req.query;
+router.post('/api/login', timeout, (req, res) => {
+  const { username, password } = req.body;
 
-  const user = users.find((user) => (
-    user.username === username &&
-    user.password === password
-  ));
+  const user = users.find(
+    (user) => user.username === username && bcrypt.compareSync(password, user.password),
+  );
 
   if (user) {
     const token = generateToken();
@@ -23,16 +23,16 @@ router.get('/api/login',timeout, (req, res) => {
       id: user.id,
       email: user.email,
       token,
-    })
+    });
 
     return;
   }
 
-  res.status(401).send();
+  res.status(401).send({ error: { message: 'Username or password incorrect' } });
 });
 
 // deletes token
-router.get('/api/logout', (req, res) => {
+router.delete('/api/logout', (req, res) => {
   const token = req.headers.authorization?.split(' ')?.[1];
 
   if (token) {
@@ -52,10 +52,8 @@ router.get('/api/user', (req, res) => {
     const tokenOwnerId = getTokenOwner(token);
 
     if (tokenOwnerId) {
-      const tokenOwner = users.find((user) => (
-        user.id === tokenOwnerId
-      ));
-  
+      const tokenOwner = users.find((user) => user.id === tokenOwnerId);
+
       res.status(200).json({
         id: tokenOwner.id,
         username: tokenOwner.username,
@@ -66,7 +64,7 @@ router.get('/api/user', (req, res) => {
     }
   }
 
-  res.status(401).send();
+  res.status(401).send({ error: { message: 'Invalid token' } });
 });
 
 export default router;
